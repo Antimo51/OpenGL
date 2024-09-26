@@ -73,7 +73,7 @@ int main(int argc, char* argv[]){
         float gVal = (sin(timeValue) / 2.0f) + 0.5f;
         float bVal = (sin(timeValue*0.9 - 0.1f) / 2.0f) + 0.5f;
 
-        glClearColor(gVal, bVal, rVal, 1.0f);
+        glClearColor(0, 0, 0, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         int setColorLocation = glGetUniformLocation(myShader.ID, "setColor");
