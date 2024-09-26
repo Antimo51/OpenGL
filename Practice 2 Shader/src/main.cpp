@@ -72,13 +72,17 @@ int main(int argc, char* argv[]){
         float rVal = (sin(timeValue*1.1 + 0.1f) / 2.0f) + 0.5f;
         float gVal = (sin(timeValue) / 2.0f) + 0.5f;
         float bVal = (sin(timeValue*0.9 - 0.1f) / 2.0f) + 0.5f;
+        float shiftLR = sin(timeValue) / 2.0f;
+        float shiftUD = cos(timeValue*1.5) / 2.0f;
 
-        glClearColor(0, 0, 0, 1.0f);
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         int setColorLocation = glGetUniformLocation(myShader.ID, "setColor");
+        int shifterLocation = glGetUniformLocation(myShader.ID, "shiftPos");
         myShader.use();
         glUniform3f(setColorLocation, rVal, gVal, bVal);
+        glUniform2f(shifterLocation, shiftLR, shiftUD);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
