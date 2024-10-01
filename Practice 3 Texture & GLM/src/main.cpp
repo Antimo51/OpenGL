@@ -118,7 +118,7 @@ int main(int argc, char* argv[]){
 
     // GLM: 变换基础
     glm::mat4 trans = glm::mat4(1.0f);                          // glm版本是0.9.9以上 需要如此初始化单位矩阵（默认为零矩阵）
-    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));// 注意是先旋转再缩放再平移 顺序是反着来的
     trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
 
     // render loop
@@ -136,11 +136,14 @@ int main(int argc, char* argv[]){
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, Texture[1]);
 
+        // transform
+        glm::mat4 appTrans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
         // render texture
         texShader.use();
         texShader.setFloat("mixVal", mixVal);
         unsigned int transformLoc = glGetUniformLocation(texShader.ID, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(appTrans));
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
