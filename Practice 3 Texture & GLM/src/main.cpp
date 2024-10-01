@@ -137,14 +137,18 @@ int main(int argc, char* argv[]){
         glBindTexture(GL_TEXTURE_2D, Texture[1]);
 
         // transform
-        glm::mat4 appTrans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::mat4 appTrans1 = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::mat4 appTrans2 = glm::scale(trans, glm::vec3(sin((float)glfwGetTime())));
 
         // render texture
         texShader.use();
         texShader.setFloat("mixVal", mixVal);
         unsigned int transformLoc = glGetUniformLocation(texShader.ID, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(appTrans));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(appTrans1));
         glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(appTrans2));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         //glfw: swap buffers & poll IO events
