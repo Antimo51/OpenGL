@@ -10,9 +10,11 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+float mixVal = 0.2;
 
 int main(int argc, char* argv[]){
     // glfw: initialize and configure
@@ -30,6 +32,7 @@ int main(int argc, char* argv[]){
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     // glad: load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
@@ -45,6 +48,8 @@ int main(int argc, char* argv[]){
     glGenTextures(2, Texture);
     glBindTexture(GL_TEXTURE_2D, Texture[0]);
     /* 纹理环绕方式等 */
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // 加载纹理
     int width, height, nrChannels;
     unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
@@ -58,6 +63,8 @@ int main(int argc, char* argv[]){
 
     // 加载png格式的纹理图片 注意比jpg多一个alpha通道
     glBindTexture(GL_TEXTURE_2D, Texture[1]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
     if (data){
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -122,6 +129,7 @@ int main(int argc, char* argv[]){
 
         // render texture
         texShader.use();
+        texShader.setFloat("mixVal", mixVal);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -144,4 +152,12 @@ void processInput(GLFWwindow* window){
 // glfw: 窗口大小一旦改变，就会触发此函数
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods){
+    if (action == GLFW_PRESS){
+        std::cout << "key pressed: " << key << std::endl;
+        if (key == GLFW_KEY_UP) mixVal += 0.1f;
+        if (key == GLFW_KEY_DOWN) mixVal -= 0.1f;
+    }
 }
