@@ -38,17 +38,29 @@ int main(int argc, char* argv[]){
     }
 
     Shader texShader("shader/vs.glsl", "shader/fs.glsl");
+    stbi_set_flip_vertically_on_load(true);     // 图片的y轴原点在顶部 OpenGL的y轴原点在底部
 
     // 生成与绑定纹理对象
-    unsigned int Texture;
-    glGenTextures(1, &Texture);
-    glBindTexture(GL_TEXTURE_2D, Texture);
+    unsigned int Texture[2];
+    glGenTextures(2, Texture);
+    glBindTexture(GL_TEXTURE_2D, Texture[0]);
     /* 纹理环绕方式等 */
     // 加载纹理
     int width, height, nrChannels;
     unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
     if (data){
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        std::cerr << "Failed to load texture. " << std::endl;
+    }
+    stbi_image_free(data);
+
+    // 加载png格式的纹理图片 注意比jpg多一个alpha通道
+    glBindTexture(GL_TEXTURE_2D, Texture[1]);
+    data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+    if (data){
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         std::cerr << "Failed to load texture. " << std::endl;
@@ -88,6 +100,11 @@ int main(int argc, char* argv[]){
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));
     glEnableVertexAttribArray(2);
 
+    // 告诉GL每个着色器采样器属于哪个纹理单元 只用设置一次
+    texShader.use(); // activate shader
+    texShader.setInt("tex1", 0);                                // shader的tex1 传值0 i.e. GL_TEXTURE0 // 两种写法是完全一样的 
+    glUniform1i(glGetUniformLocation(texShader.ID, "tex2"), 1); // shader的tex2 传值1 i.e. GL_TEXTURE1 // (see shader.h)
+
     // render loop
     while (!glfwWindowShouldClose(window)){
         // input
@@ -98,9 +115,12 @@ int main(int argc, char* argv[]){
         glClear(GL_COLOR_BUFFER_BIT);
 
         // bind texture
-        glBindTexture(GL_TEXTURE_2D, Texture);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, Texture[0]);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, Texture[1]);
 
-        // render "container.jpg"
+        // render texture
         texShader.use();
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
