@@ -66,6 +66,10 @@ int main(int argc, char* argv[]){
     unsigned int texture_GIRL;
     glGenTextures(1, &texture_GIRL);
     glBindTexture(GL_TEXTURE_2D, texture_GIRL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, nrChannels;
     unsigned char* data = stbi_load("resources/textures/girl.png", &width, &height, &nrChannels, 0);
@@ -144,7 +148,7 @@ int main(int argc, char* argv[]){
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3*sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // render loop
@@ -177,7 +181,7 @@ int main(int argc, char* argv[]){
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            model = glm::rotate(model, glm::radians(angle + currentFrame*10.0f), glm::vec3(1.0f, 0.5f, 0.8f));
             girlShader.setMat4("model", model);
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
