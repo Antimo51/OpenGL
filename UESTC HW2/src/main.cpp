@@ -53,11 +53,12 @@ int main(int argc, char* argv[]){
         return -1;
     }
 
-    Shader axisShader("shader/axis_vs.glsl", "shader/axis_fs.glsl");
+    Shader axisShader("shader/vs.glsl", "shader/fs.glsl");
+    Shader geoShader("shader/vs.glsl", "shader/fs.glsl");
 
     glEnable(GL_DEPTH_TEST);
 
-    float axisLength = 1000.2f;
+    float axisLength = 1.2f;
     float axisVertices[] = {
         // 位置             // 颜色
         0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,  
@@ -68,12 +69,46 @@ int main(int argc, char* argv[]){
         0.0f, 0.0f, axisLength,  1.0f, 0.0f, 0.0f
     };
 
+    glm::vec3 cubePos(0.0f, 0.0f, -1.0f);
+    float cubeVertices[] = {
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 
+        0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 
+        -0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 
+        -0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 
+        -0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f, 
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 1.0f
+    };
+    int cubeIndices[] = {       // 这里数据类型写成float去了，被硬控一小时
+        0, 1, 2, 2, 3, 0, 
+        3, 2, 6, 6, 7, 3, 
+        7, 6, 5, 5, 4, 7, 
+        4, 5, 1, 1, 0, 4, 
+        0, 4, 7, 7, 3, 0, 
+        1, 2, 6, 6, 5, 1
+    };
+
     unsigned int axisVAO, axisVBO;
     glGenVertexArrays(1, &axisVAO);
     glGenBuffers(1, &axisVBO);
     glBindVertexArray(axisVAO);
     glBindBuffer(GL_ARRAY_BUFFER, axisVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(axisVertices), axisVertices, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    unsigned int cubeVAO, cubeVBO, cubeEBO;
+    glGenVertexArrays(1, &cubeVAO);
+    glGenBuffers(1, &cubeVBO);
+    glGenBuffers(1, &cubeEBO);
+    glBindVertexArray(cubeVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cubeIndices), cubeIndices, GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(3*sizeof(float)));
@@ -102,6 +137,15 @@ int main(int argc, char* argv[]){
         axisShader.setMat4("model", baseModel);
         glBindVertexArray(axisVAO);
         glDrawArrays(GL_LINES, 0, 6);
+
+        glm::mat4 cubeModel = glm::translate(baseModel, cubePos);
+        if (objRotateFlag) cubeModel = glm::rotate(cubeModel, glm::radians(currentFrame), glm::vec3(0.0, 1.0, 0.0));
+        geoShader.use();
+        geoShader.setMat4("projection", projection);
+        geoShader.setMat4("view", view);
+        geoShader.setMat4("model", cubeModel);
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         //glfw: swap buffers & poll IO events
         glfwSwapBuffers(window);
