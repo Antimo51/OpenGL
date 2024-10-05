@@ -31,8 +31,8 @@ float rotateAngle = 0.0f;
 Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 const float PI = 3.14159265358979323846f; // 定义π的值
-const int STACKS = 30; // 球体的纵向切片数
-const int SLICES = 30; // 球体的横向切片数
+const int STACKS = 1000; // 球体的纵向切片数
+const int SLICES = 1000; // 球体的横向切片数
 
 float ballVertices[STACKS * SLICES * 3 * 2]; // 用于存储球体顶点的数组
 
@@ -211,7 +211,7 @@ int main(int argc, char* argv[]){
         ballModel = glm::scale(ballModel, glm::vec3(0.4, 0.4, 0.4));
         geoShader.setMat4("model", ballModel);
         glBindVertexArray(ballVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 5400);
+        glDrawArrays(GL_TRIANGLES, 0, sizeof(ballVertices));
 
         //glfw: swap buffers & poll IO events
         glfwSwapBuffers(window);

@@ -12,7 +12,7 @@ float dist;
 
 void main(){
     gl_Position = projection * view * model * vec4(aPos, 1.0);
-    dvec = (cameraPos - aPos);
+    dvec = (cameraPos - gl_Position.xyz);
     dist = sqrt(dvec.x*dvec.x + dvec.y*dvec.y + dvec.z*dvec.z) / 4;
     verticeCol = vec3(dist, 0.0, 1.0 - dist);
 }
