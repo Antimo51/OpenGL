@@ -232,7 +232,11 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn){
     lasX = xpos;
     lasY = ypos;
 
-    camera.ProcessMouseMovement(xoffset, yoffset);
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+        camera.ProcessMouseMovement(xoffset, yoffset);
+    }
+
+    // camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset){

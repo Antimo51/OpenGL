@@ -51,76 +51,76 @@ src/main.o: src/main.cpp include/glad/glad.h include/KHR/khrplatform.h \
  include/glm/./ext/../detail/../detail/setup.hpp \
  include/glm/./ext/../detail/../mat2x3.hpp \
  include/glm/./ext/../detail/.././ext/matrix_double2x3.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat2x3.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat2x3.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat2x3.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat2x3.inl \
  include/glm/./ext/../detail/.././ext/matrix_double2x3_precision.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float2x3.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float2x3_precision.hpp \
  include/glm/./ext/../detail/../mat2x4.hpp \
  include/glm/./ext/../detail/.././ext/matrix_double2x4.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat2x4.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat2x4.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat2x4.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat2x4.inl \
  include/glm/./ext/../detail/.././ext/matrix_double2x4_precision.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float2x4.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float2x4_precision.hpp \
  include/glm/./ext/../detail/../mat3x2.hpp \
  include/glm/./ext/../detail/.././ext/matrix_double3x2.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat3x2.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat3x2.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat3x2.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat3x2.inl \
  include/glm/./ext/../detail/.././ext/matrix_double3x2_precision.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float3x2.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float3x2_precision.hpp \
  include/glm/./ext/../detail/../mat3x3.hpp \
  include/glm/./ext/../detail/.././ext/matrix_double3x3.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat3x3.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat3x3.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat3x3.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat3x3.inl \
  include/glm/./ext/../detail/.././ext/matrix_double3x3_precision.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float3x3.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float3x3_precision.hpp \
  include/glm/./ext/../detail/../mat3x4.hpp \
  include/glm/./ext/../detail/.././ext/matrix_double3x4.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat3x4.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat3x4.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat3x4.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat3x4.inl \
  include/glm/./ext/../detail/.././ext/matrix_double3x4_precision.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float3x4.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float3x4_precision.hpp \
  include/glm/./ext/../detail/../mat4x2.hpp \
  include/glm/./ext/../detail/.././ext/matrix_double4x2.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat4x2.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat4x2.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat4x2.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat4x2.inl \
  include/glm/./ext/../detail/.././ext/matrix_double4x2_precision.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float4x2.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float4x2_precision.hpp \
  include/glm/./ext/../detail/../mat4x3.hpp \
  include/glm/./ext/../detail/.././ext/matrix_double4x3.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat4x3.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat4x3.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat4x3.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat4x3.inl \
  include/glm/./ext/../detail/.././ext/matrix_double4x3_precision.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float4x3.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float4x3_precision.hpp \
  include/glm/./ext/../detail/../mat4x4.hpp \
  include/glm/./ext/../detail/.././ext/matrix_double4x4.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat4x4.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_mat4x4.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat4x4.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_mat4x4.inl \
  include/glm/./ext/../detail/.././ext/matrix_double4x4_precision.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float4x4.hpp \
  include/glm/./ext/../detail/.././ext/matrix_float4x4_precision.hpp \
  include/glm/./ext/../detail/../detail/func_matrix.inl \
- D:/Studio/OpenGL/HW1/include/glm/geometric.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/func_geometric.inl \
- D:/Studio/OpenGL/HW1/include/glm/exponential.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_vec1.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/type_vec1.inl \
- D:/Studio/OpenGL/HW1/include/glm/detail/func_exponential.inl \
- D:/Studio/OpenGL/HW1/include/glm/vector_relational.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/setup.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/func_vector_relational.inl \
- D:/Studio/OpenGL/HW1/include/glm/detail/_vectorize.hpp \
- D:/Studio/OpenGL/HW1/include/glm/common.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/_fixes.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/func_common.inl \
- D:/Studio/OpenGL/HW1/include/glm/detail/compute_common.hpp \
- D:/Studio/OpenGL/HW1/include/glm/detail/setup.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/geometric.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/func_geometric.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/exponential.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_vec1.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/type_vec1.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/func_exponential.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/vector_relational.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/setup.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/func_vector_relational.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/_vectorize.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/common.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/_fixes.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/func_common.inl \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/compute_common.hpp \
+ D:/Studio/OpenGL/UESTC\ HW1/include/glm/detail/setup.hpp \
  include/glm/./ext/matrix_double2x2_precision.hpp \
  include/glm/./ext/matrix_float2x2.hpp \
  include/glm/./ext/matrix_float2x2_precision.hpp \
