@@ -25,8 +25,10 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 bool objRotateFlag = false;
+bool lastPressed = false;
+float rotateAngle = 0.0f;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 
 int main(int argc, char* argv[]){
     // glfw: initialize and configure
@@ -54,14 +56,14 @@ int main(int argc, char* argv[]){
     }
 
     Shader axisShader("shader/vs.glsl", "shader/fs.glsl");
-    Shader geoShader("shader/vs.glsl", "shader/fs.glsl");
+    Shader geoShader("shader/geo_vs.glsl", "shader/fs.glsl");
 
     glEnable(GL_DEPTH_TEST);
 
-    float axisLength = 1.2f;
+    float axisLength = 10.2f;
     float axisVertices[] = {
         // 位置             // 颜色
-        0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,  
+        0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f, 
         axisLength, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f, 
         0.0f, axisLength, 0.0f,  1.0f, 0.0f, 0.0f, 
@@ -69,7 +71,7 @@ int main(int argc, char* argv[]){
         0.0f, 0.0f, axisLength,  1.0f, 0.0f, 0.0f
     };
 
-    glm::vec3 cubePos(0.0f, 0.0f, -1.0f);
+    glm::vec3 cubePos(0.0f, 0.0f, 1.0f);
     float cubeVertices[] = {
         0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 
         0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1.0f, 
@@ -139,11 +141,13 @@ int main(int argc, char* argv[]){
         glDrawArrays(GL_LINES, 0, 6);
 
         glm::mat4 cubeModel = glm::translate(baseModel, cubePos);
-        if (objRotateFlag) cubeModel = glm::rotate(cubeModel, glm::radians(currentFrame), glm::vec3(0.0, 1.0, 0.0));
+        if (objRotateFlag) rotateAngle += deltaTime;
+        cubeModel = glm::rotate(cubeModel, glm::radians(rotateAngle * 50), glm::vec3(0.0, 1.0, 0.0));
         geoShader.use();
         geoShader.setMat4("projection", projection);
         geoShader.setMat4("view", view);
         geoShader.setMat4("model", cubeModel);
+        geoShader.setVec3("cameraPos", camera.Position);
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
@@ -171,8 +175,9 @@ void processInput(GLFWwindow* window){
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
     
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-        objRotateFlag ^= 1;
+    bool currentRPressed = glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS;
+    if (!lastPressed && currentRPressed) objRotateFlag ^= 1;
+    lastPressed = currentRPressed;
     // if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) // 会与移动按钮冲突，所以改为按R切换是否旋转
     //     objRotateFlag = false;
 }
@@ -196,7 +201,6 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn){
     lasX = xpos;
     lasY = ypos;
 
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
         camera.ProcessMouseMovement(xoffset, yoffset);
-    }
 }
