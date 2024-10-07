@@ -5,8 +5,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #include <shader.h>
 #include <camera.h>
+#include <mesh.h>
+#include <model.h>
 
 #include <iostream>
 
@@ -99,13 +108,16 @@ int main(int argc, char* argv[]){
         std::cerr << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+    glEnable(GL_DEPTH_TEST);
+    stbi_set_flip_vertically_on_load(true);
 
     Shader axisShader("shader/vs.glsl", "shader/fs.glsl");
     Shader geoShader("shader/geo_vs.glsl", "shader/fs.glsl");
+    Shader modelShader("shader/vs4model.glsl", "shader/fs4model.glsl");
 
-    glEnable(GL_DEPTH_TEST);
+    Model model("resources/models/nanosuit.obj");
 
-    float axisLength = 10.2f;
+    float axisLength = 100.2f;
     float axisVertices[] = {
         // 位置             // 颜色
         0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f, 
@@ -116,7 +128,7 @@ int main(int argc, char* argv[]){
         0.0f, 0.0f, axisLength,  1.0f, 0.0f, 0.0f
     };
 
-    glm::vec3 cubePos(0.0f, 0.0f, 1.0f);
+    glm::vec3 cubePos(0.0f, 0.0f, 2.0f);
     float cubeVertices[] = {
         0.5f, 0.5f, 0.5f, 
         0.5f, -0.5f, 0.5f, 
@@ -137,7 +149,7 @@ int main(int argc, char* argv[]){
     };
 
     createSphere();
-    glm::vec3 ballPos(1.2f, 0.0f, 0.3f);
+    glm::vec3 ballPos(1.2f, 2.0f, 0.3f);
 
     unsigned int axisVAO, axisVBO;
     glGenVertexArrays(1, &axisVAO);
@@ -212,6 +224,15 @@ int main(int argc, char* argv[]){
         geoShader.setMat4("model", ballModel);
         glBindVertexArray(ballVAO);
         glDrawArrays(GL_TRIANGLES, 0, sizeof(ballVertices));
+
+        modelShader.use();
+        glm::mat4 modelModel = glm::scale(baseModel, glm::vec3(0.1f, 0.1f, 0.1f));
+        modelModel = glm::rotate(modelModel, glm::radians(rotateAngle * 50), glm::vec3(0.0, 1.0, 0.0));
+        modelShader.setMat4("projection", projection);
+        modelShader.setMat4("view", view);
+        modelShader.setMat4("model", modelModel);
+        modelShader.setVec3("cameraPos", camera.Position);
+        model.Draw(modelShader);
 
         //glfw: swap buffers & poll IO events
         glfwSwapBuffers(window);
