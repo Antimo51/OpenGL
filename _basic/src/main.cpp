@@ -3,11 +3,12 @@
 
 #include <iostream>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
+float SCR_PROPORTION = (float)SCR_WIDTH / (float)SCR_HEIGHT;
 
 int main(int argc, char* argv[]){
     // glfw: initialize and configure
@@ -58,4 +59,7 @@ void processInput(GLFWwindow* window){
 // glfw: 窗口大小一旦改变，就会触发此函数
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
+    SCR_WIDTH = width;
+    SCR_HEIGHT = height;
+    SCR_PROPORTION = (float)width / (float)height;
 }

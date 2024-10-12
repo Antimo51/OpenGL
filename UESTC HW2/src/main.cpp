@@ -24,8 +24,8 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
 float SCR_PROPORTION = (float)SCR_WIDTH / (float)SCR_HEIGHT;
 float lasX = SCR_WIDTH / 2.0f;
 float lasY = SCR_HEIGHT / 2.0f;
@@ -33,6 +33,7 @@ float lasY = SCR_HEIGHT / 2.0f;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+bool ProjectionMethod = false;
 bool objRotateFlag = false;
 bool lastPressed = false;
 float rotateAngle = 0.0f;
@@ -196,7 +197,9 @@ int main(int argc, char* argv[]){
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_PROPORTION, 0.1f, 100.0f);
+        glm::mat4 projection = (ProjectionMethod=1)?
+            glm::perspective(glm::radians(camera.Zoom), (float)SCR_PROPORTION, 0.1f, 100.0f):
+            glm::ortho(0.0f, (float)SCR_WIDTH, 0.0f, (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 baseModel(1.0f);
         if (objRotateFlag) rotateAngle += deltaTime;
@@ -268,6 +271,8 @@ void processInput(GLFWwindow* window){
 // glfw: 窗口大小一旦改变，就会触发此函数
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
+    SCR_WIDTH = width;
+    SCR_HEIGHT = height;
     SCR_PROPORTION = (float)width / (float)height;
 }
 
