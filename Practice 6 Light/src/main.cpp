@@ -60,9 +60,9 @@ int main(int argc, char* argv[]){
     Shader lightShader("shader/vs.glsl", "shader/light_fs.glsl");
 
     // Model // 学习一下.obj文件格式
-    glm::vec3 lightPos(20.0f, 20.0f, 20.0f);
+    glm::vec4 lightPosBase(20.0f, 20.0f, 20.0f, 1.0f);
     Model light("resources/models/ball.obj");
-    Model cube("resources/models/cube.obj");
+    Model cube("resources/models/ball.obj");
 
     // render loop
     while (!glfwWindowShouldClose(window)){
@@ -80,14 +80,18 @@ int main(int argc, char* argv[]){
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_PROPORTION, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         glm::mat4 baseModel(1.0f);
+
+        glm::mat4 rotateModel = glm::rotate(baseModel, glm::radians(currentFrame) * 50, glm::vec3(0.0f, 1.0f, 0.0f));
+        // rotateModel = glm::rotate(rotateModel, glm::radians(currentFrame) * 20, glm::vec3(1.0f, 0.0f, 0.0f));
+        glm::vec4 lightPos = rotateModel * lightPosBase;
+        lightPos.y *= sin(currentFrame);
         
         lightShader.use();
         glm::mat4 lightModel = glm::scale(baseModel, glm::vec3(0.1f, 0.1f, 0.1f));
-        lightModel = glm::translate(lightModel, lightPos);
+        lightModel = glm::translate(lightModel, glm::vec3(lightPos.x, lightPos.y, lightPos.z));
         lightShader.setMat4("projection", projection);
         lightShader.setMat4("view", view);
         lightShader.setMat4("model", lightModel);
-        lightShader.setVec3("lightPos", lightPos);
         light.Draw(lightShader);
 
         modelShader.use();
@@ -96,6 +100,7 @@ int main(int argc, char* argv[]){
         modelShader.setMat4("model", baseModel);
         modelShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         modelShader.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("lightPos", lightPos.x, lightPos.y, lightPos.z);
         cube.Draw(modelShader);
 
         //glfw: swap buffers & poll IO events

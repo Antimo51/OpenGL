@@ -125,6 +125,23 @@ class Shader{
             glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
         }
 
+        // 提取uniform值 待完善
+        bool getBool(const std::string &name) const{
+            GLint result;
+            glGetUniformiv(ID, glGetUniformLocation(ID, name.c_str()), &result);
+            return result != 0;
+        }
+        int getInt(const std::string &name) const{
+            GLint result;
+            glGetUniformiv(ID, glGetUniformLocation(ID, name.c_str()), &result);
+            return static_cast<int> (result);
+        }
+        float getFloat(const std::string &name) const{
+            GLfloat result;
+            glGetUniformfv(ID, glGetUniformLocation(ID, name.c_str()), &result);
+            return static_cast<float> (result);
+        }
+
         // 处理报错
         private:
             void checkCompileErrors(GLuint shader, std::string type){
