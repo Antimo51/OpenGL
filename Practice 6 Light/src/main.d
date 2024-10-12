@@ -183,6 +183,6 @@ src/main.o: src/main.cpp include/glad/glad.h include/KHR/khrplatform.h \
  include/glm/detail/func_packing.inl include/glm/detail/type_half.hpp \
  include/glm/detail/setup.hpp include/glm/detail/type_half.inl \
  include/glm/integer.hpp include/glm/detail/func_integer.inl \
- include/camera.h include/shader.h include/mesh.h include/model.h \
- include/stb_image.h include/assimp/Importer.hpp include/assimp/scene.h \
+ include/stb_image.h include/camera.h include/shader.h include/mesh.h \
+ include/model.h include/assimp/Importer.hpp include/assimp/scene.h \
  include/assimp/postprocess.h
