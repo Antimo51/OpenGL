@@ -68,25 +68,19 @@ int main(int argc, char* argv[]){
         glm::vec3( 1.5f,  0.2f, -1.5f),
         glm::vec3(-1.3f,  1.0f, -1.5f)
     };
-    
-    glm::vec3 pointLightPositions[] = {
+
+    glm::vec3 pointLightPos[] = {
         glm::vec3( 0.7f,  0.2f,  2.0f),
-        glm::vec3( 2.3f, -3.3f, -4.0f),
-        glm::vec3(-4.0f,  2.0f, -12.0f),
-        glm::vec3( 0.0f,  0.0f, -3.0f)
+        glm::vec3( 2.3f,  3.3f, -4.0f)
     };
 
     Shader modelShader("shader/model_vs.glsl", "shader/model_fs.glsl");
     Shader lightShader("shader/light_vs.glsl", "shader/light_fs.glsl");
 
-    glm::vec3 lightPos1(5.0f, 5.0f, 5.0f);
-    glm::vec3 lightPos2(10.0f, 0.0f, 0.0f);
-    glm::vec4 lightColor(1.0f, 1.0f, 1.0f, 1.0f);
-    Model light1("resources/models/ball.obj");
-    Model light2("resources/models/ball.obj");
-    Model cube("resources/models/cube.obj");
-    Model plane("resources/models/plane.obj");
-    Model teapot("resources/models/teapot.obj");
+    Model mdl_plane("resources/models/plane/plane.obj");
+    Model mdl_teapot("resources/models/teapot/teapot.obj");
+    Model mdl_nanosuit("resources/models/nanosuit/nanosuit.obj");
+    Model lit_pointLight("resources/models/ball/ball.obj");
 
     // render loop
     while (!glfwWindowShouldClose(window)){
@@ -103,14 +97,66 @@ int main(int argc, char* argv[]){
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_PROPORTION, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 baseModel(1.0f);
+
+        lightShader.use();
+        lightShader.setMat4("projection", projection);
+        lightShader.setMat4("view", view);
+        for(int i = 0; i < 2; ++i){
+            glm::mat4 model= glm::translate(glm::mat4(1.0f), pointLightPos[i]);
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+            lightShader.setMat4("model", model);
+            lit_pointLight.Draw(lightShader);
+        }
 
         modelShader.use();
+        modelShader.setVec3("viewPos", camera.Position);
+        modelShader.setFloat("material.shininess", 32.0f);
+
+        // directional light
+        modelShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        modelShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        modelShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+        // point light 1
+        modelShader.setVec3("pointLights[0].position", pointLightPos[0]);
+        modelShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+        modelShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+        modelShader.setFloat("pointLights[0].constant", 1.0f);
+        modelShader.setFloat("pointLights[0].linear", 0.09f);
+        modelShader.setFloat("pointLights[0].quadratic", 0.032f);
+        // point light 2
+        modelShader.setVec3("pointLights[1].position", pointLightPos[1]);
+        modelShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
+        modelShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
+        modelShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+        modelShader.setFloat("pointLights[1].constant", 1.0f);
+        modelShader.setFloat("pointLights[1].linear", 0.09f);
+        modelShader.setFloat("pointLights[1].quadratic", 0.032f);
+        // spotLight
+        modelShader.setVec3("spotLight.position", camera.Position);
+        modelShader.setVec3("spotLight.direction", camera.Front);
+        modelShader.setVec3("spotLight.ambient", 0.0f, 0.0f, 0.0f);
+        modelShader.setVec3("spotLight.diffuse", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("spotLight.specular", 1.0f, 1.0f, 1.0f);
+        modelShader.setFloat("spotLight.constant", 1.0f);
+        modelShader.setFloat("spotLight.linear", 0.09f);
+        modelShader.setFloat("spotLight.quadratic", 0.032f);
+        modelShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        modelShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
-        modelShader.setMat4("model", baseModel);
-        plane.Draw(modelShader);
-        teapot.Draw(modelShader);
+        modelShader.setMat4("model", glm::mat4(1.0f));
+        modelShader.setMat4("inv", glm::mat4(1.0f));
+        mdl_plane.Draw(modelShader);
+        mdl_teapot.Draw(modelShader);
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 5.0f, 3.0f));
+        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+        glm::mat4 inv = glm::transpose(glm::inverse(model));
+        modelShader.setMat4("model", model);
+        modelShader.setMat4("inv", inv);
+        mdl_nanosuit.Draw(modelShader);
 
         //glfw: swap buffers & poll IO events
         glfwSwapBuffers(window);

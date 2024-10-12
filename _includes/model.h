@@ -5,8 +5,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+// #define STB_IMAGE_IMPLEMENTATION
+// #include <stb_image.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -53,7 +53,7 @@ class Model {
                 return;
             }
 
-            directory = path.substr(0, path.find_last_not_of('/'));
+            directory = path.substr(0, path.find_last_of('/'));
             processNode(scene->mRootNode, scene);
         }
 
@@ -84,6 +84,7 @@ class Model {
                     vector.y = mesh->mNormals[i].y;
                     vector.z = mesh->mNormals[i].z;
                     vertex.Normal = vector;
+                    // printf("normal: (%f, %f, %f)\n", mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
                 }
                 if (mesh->mTextureCoords[0]){
                     glm::vec2 vec;
@@ -161,6 +162,7 @@ class Model {
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma){
     string filename = string(path);
     filename = directory + '/' + filename;
+    // cout << "trying to load: '" << filename << "' in directory '" << directory << "'" << endl;
 
     unsigned int textureID;
     glGenTextures(1, &textureID);

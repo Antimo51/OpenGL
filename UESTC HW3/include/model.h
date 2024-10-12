@@ -53,7 +53,7 @@ class Model {
                 return;
             }
 
-            directory = path.substr(0, path.find_last_not_of('/'));
+            directory = path.substr(0, path.find_last_of('/'));
             processNode(scene->mRootNode, scene);
         }
 
@@ -162,6 +162,7 @@ class Model {
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma){
     string filename = string(path);
     filename = directory + '/' + filename;
+    // cout << "trying to load: '" << filename << "' in directory '" << directory << "'" << endl;
 
     unsigned int textureID;
     glGenTextures(1, &textureID);
