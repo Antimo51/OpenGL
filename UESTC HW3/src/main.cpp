@@ -71,7 +71,7 @@ int main(int argc, char* argv[]){
 
     glm::vec3 pointLightPos[] = {
         glm::vec3( 0.7f,  0.2f,  2.0f),
-        glm::vec3( 2.3f,  3.3f, -4.0f)
+        glm::vec3( 2.3f,  1.3f, -2.0f)
     };
 
     Shader modelShader("shader/model_vs.glsl", "shader/model_fs.glsl");
@@ -151,7 +151,7 @@ int main(int argc, char* argv[]){
         modelShader.setMat4("inv", glm::mat4(1.0f));
         mdl_plane.Draw(modelShader);
         mdl_teapot.Draw(modelShader);
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 5.0f, 3.0f));
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f));
         model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
         glm::mat4 inv = glm::transpose(glm::inverse(model));
         modelShader.setMat4("model", model);

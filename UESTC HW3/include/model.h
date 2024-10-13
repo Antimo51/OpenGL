@@ -37,7 +37,8 @@ class Model {
             // cout << "path: " << path << endl;
         }
 
-        void Draw(Shader shader){
+        void Draw(Shader &shader){
+            // cout << "draw directory: " << directory << endl;
             for(unsigned int i = 0; i < meshes.size(); ++i)
                 meshes[i].Draw(shader);
         }
