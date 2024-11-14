@@ -52,6 +52,11 @@ uniform PointLight pointLights[2];
 uniform SpotLight spotLight;
 uniform Material material;
 
+uniform vec4 fogColor;
+uniform float fogDensity;
+uniform float fogStart;
+uniform float fogEnd;
+
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragpos, vec3 viewDir);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragpos, vec3 viewDir);
@@ -64,6 +69,10 @@ void main(){
     for(int i = 0; i < 2; ++i)
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);
     result += CalcSpotLight(spotLight, norm, FragPos, viewDir);
+
+    float fogFactor = (fogEnd - FragPos.z) / (fogEnd - fogStart);
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+    result = mix(fogColor.xyz, result, fogFactor);
 
     FragColor = vec4(result, 1.0);
 }

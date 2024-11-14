@@ -29,6 +29,8 @@ float lastFrame = 0.0f;
 float lastX = 0;
 float lastY = 0;
 
+bool lightSwitch[2] = {true, true};
+
 int main(int argc, char* argv[]){
     // glfw: initialize and configure
     glfwInit();
@@ -55,6 +57,18 @@ int main(int argc, char* argv[]){
     }
     glEnable(GL_DEPTH_TEST);
     stbi_set_flip_vertically_on_load(true);
+
+    GLfloat fogColor[4] = {0.5f, 0.5f, 0.5f, 1.0f};
+    glEnable(GL_FOG);
+    glFogfv(GL_FOG_COLOR, fogColor);
+
+    // 设置为线性模式
+    glFogi(GL_FOG_MODE, GL_LINEAR);
+
+    // 设置雾的密度、起始距离和结束距离
+    glFogf(GL_FOG_DENSITY, 1);
+    glFogf(GL_FOG_START, 2.0f);
+    glFogf(GL_FOG_END, 100.0f);
 
     glm::vec3 cubePositions[] = {
         glm::vec3( 0.0f,  0.0f,  0.0f),
@@ -92,7 +106,7 @@ int main(int argc, char* argv[]){
         processInput(window);
 
         // render
-        glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
+        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_PROPORTION, 0.1f, 100.0f);
@@ -102,6 +116,7 @@ int main(int argc, char* argv[]){
         lightShader.setMat4("projection", projection);
         lightShader.setMat4("view", view);
         for(int i = 0; i < 2; ++i){
+            if (!lightSwitch[i]) continue;
             glm::mat4 model= glm::translate(glm::mat4(1.0f), pointLightPos[i]);
             model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             lightShader.setMat4("model", model);
@@ -111,6 +126,10 @@ int main(int argc, char* argv[]){
         modelShader.use();
         modelShader.setVec3("viewPos", camera.Position);
         modelShader.setFloat("material.shininess", 32.0f);
+        modelShader.setVec4("fogColor", 0.5f, 0.5f, 0.5f, 1.0f);
+        modelShader.setFloat("fogDensity", 1);
+        modelShader.setFloat("fogStart", 2.0f);
+        modelShader.setFloat("fogEnd", 100.0f);
 
         // directional light
         modelShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
@@ -119,17 +138,17 @@ int main(int argc, char* argv[]){
         modelShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
         // point light 1
         modelShader.setVec3("pointLights[0].position", pointLightPos[0]);
-        modelShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-        modelShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-        modelShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+        lightSwitch[0]? modelShader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f): modelShader.setVec3("pointLights[0].ambient", 0.0f, 0.0f, 0.0f);
+        lightSwitch[0]? modelShader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f): modelShader.setVec3("pointLights[0].diffuse", 0.0f, 0.0f, 0.0f);
+        lightSwitch[0]? modelShader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f): modelShader.setVec3("pointLights[0].specular", 0.0f, 0.0f, 0.0f);
         modelShader.setFloat("pointLights[0].constant", 1.0f);
         modelShader.setFloat("pointLights[0].linear", 0.09f);
         modelShader.setFloat("pointLights[0].quadratic", 0.032f);
         // point light 2
         modelShader.setVec3("pointLights[1].position", pointLightPos[1]);
-        modelShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-        modelShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-        modelShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+        lightSwitch[1]? modelShader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f): modelShader.setVec3("pointLights[1].ambient", 0.0f, 0.0f, 0.0f);
+        lightSwitch[1]? modelShader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f): modelShader.setVec3("pointLights[1].diffuse", 0.0f, 0.0f, 0.0f);
+        lightSwitch[1]? modelShader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f): modelShader.setVec3("pointLights[1].specular", 0.0f, 0.0f, 0.0f);
         modelShader.setFloat("pointLights[1].constant", 1.0f);
         modelShader.setFloat("pointLights[1].linear", 0.09f);
         modelShader.setFloat("pointLights[1].quadratic", 0.032f);
@@ -152,11 +171,19 @@ int main(int argc, char* argv[]){
         mdl_plane.Draw(modelShader);
         mdl_teapot.Draw(modelShader);
         glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
         glm::mat4 inv = glm::transpose(glm::inverse(model));
         modelShader.setMat4("model", model);
         modelShader.setMat4("inv", inv);
         mdl_nanosuit.Draw(modelShader);
+        for(unsigned int i = 1; i < 10; ++i){
+            model = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f+i, 0.0f, -(float)i));
+            model = glm::scale(model, glm::vec3(0.2f-i/100.0f, 0.2f-i/100.0f, 0.2f-i/100.0f));
+            inv = glm::transpose(glm::inverse(model));
+            modelShader.setMat4("model", model);
+            modelShader.setMat4("inv", inv);
+            mdl_nanosuit.Draw(modelShader);
+        }
 
         //glfw: swap buffers & poll IO events
         glfwSwapBuffers(window);
@@ -168,6 +195,8 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
+bool currentLEFTpressed, lastLEFTpressed;
+bool currentRIGHTpressed, lastRIGHTpressed;
 // process all input
 void processInput(GLFWwindow* window){
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -181,6 +210,14 @@ void processInput(GLFWwindow* window){
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    
+    currentLEFTpressed = glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS;
+    if (!lastLEFTpressed && currentLEFTpressed) lightSwitch[0] ^= 1;
+    lastLEFTpressed = currentLEFTpressed;
+
+    currentRIGHTpressed = glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS;
+    if (!lastRIGHTpressed && currentRIGHTpressed) lightSwitch[1] ^= 1;
+    lastRIGHTpressed = currentRIGHTpressed;
 }
 
 // glfw: 窗口大小一旦改变，就会触发此函数
